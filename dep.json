@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+  },
+  "variables": {
+    "a1" : ["name1", "name2"],
+    "res" : []
+  },
+  "resources": [
+    {
+      "name": "[concat('it', copyIndex())]",
+      "apiVersion": "2015-01-01", 
+      "type": "Microsoft.Resources/deployments",
+      "copy": {
+          "name": "copy1",
+          "count": "[length(variables('a1'))]"
+        },
+      "dependsOn": [],
+      "properties": { 
+        "mode": "Incremental", 
+        "templateLink": {
+            "uri": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/echo.json",
+            "contentVersion": "1.0.0.0"
+        }, 
+        "parameters": { 
+            "input":{"value": {"a":"[copyIndex()]"}} 
+        }
+     }
+    }
+  ],
+  "outputs": {
+    "te":{
+      "type": "string",
+      "value": "cit"
+    }
+  }
+}
+
