@@ -12,8 +12,8 @@
   "variables": {},
   "resources": [],
   "outputs": {
-    "inputIs": {
-      "value": "["parameters('input')"]",
+    "inputEcho": {
+      "value": "[parameters('input')]",
       "type" : "object"
     }
   }
