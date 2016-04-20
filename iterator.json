@@ -18,11 +18,12 @@
   },
   "variables": {
     "a1" : "[parameters('inputArray')]",
+    "indexBase": 1,
     "res" : []
   },
   "resources": [
     {
-      "name": "it-1",
+      "name": "it0",
       "apiVersion": "2015-01-01", 
       "type": "Microsoft.Resources/deployments",
       "properties": { 
@@ -38,7 +39,7 @@
      }
     },
     {
-      "name": "[concat('work', copyIndex())]",
+      "name": "[concat('work', copyIndex(variables('indexBase')))]",
       "apiVersion": "2015-01-01", 
       "type": "Microsoft.Resources/deployments",
       "copy": {
@@ -53,11 +54,11 @@
             "contentVersion": "1.0.0.0"
         }, 
         "parameters": { 
-            "input":{"value": "[variables('a1')[copyIndex()]]"}}
+            "input":{"value": "[variables('a1')[sub(copyIndex(variables('indexBase')),1)]]"}}
         }
     },
     {
-      "name": "[concat('it', copyIndex())]",
+      "name": "[concat('it', copyIndex(variables('indexBase')))]",
       "apiVersion": "2015-01-01", 
       "type": "Microsoft.Resources/deployments",
       "copy": {
@@ -72,8 +73,8 @@
             "contentVersion": "1.0.0.0"
         }, 
         "parameters": { 
-            "arrayIn1":{"value": "[reference(concat('it', sub(copyIndex(), 1))).outputs.arrayOut.value]"},
-            "arrayIn2":{"value": ["[reference(concat('work', copyIndex())).outputs.output.value]"]}
+            "arrayIn1":{"value": "[reference(concat('it', sub(copyIndex(variables('indexBase')), 1))).outputs.arrayOut.value]"},
+            "arrayIn2":{"value": ["[reference(concat('work', copyIndex(variables('indexBase')))).outputs.output.value]"]}
         }
      }
     }
@@ -81,7 +82,7 @@
   "outputs": {
     "outArray":{
       "type": "array",
-      "value": "[reference('it1').outputs.arrayOut.value]"
+      "value": "[reference(concat('it', length(variables('a1')))).outputs.arrayOut.value]"
     }
   }
 }

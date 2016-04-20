@@ -34,6 +34,22 @@
           "subnetName":{"value": "[variables('subnetName')]"} 
        }
      }
+    },
+    {
+     "apiVersion": "2015-01-01", 
+     "name": "GetIpsForVnet", 
+     "type": "Microsoft.Resources/deployments",
+     "properties": { 
+       "mode": "Incremental", 
+       "templateLink": {
+          "uri": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/iterator.json",
+          "contentVersion": "1.0.0.0"
+       }, 
+       "parameters": {
+          "inputArray":{"value": "[parameters('virtualNetworkName')]"},
+          "functionalTemplateUri": {"value": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/ip2vm.json"}
+       }
+     }
     }
   ],
   "outputs": {
