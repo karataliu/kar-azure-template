@@ -80,7 +80,7 @@
     }
   ],
   "outputs": {
-    "outArray":{
+    "outputArray":{
       "type": "array",
       "value": "[reference(concat('it', length(variables('a1')))).outputs.arrayOut.value]"
     }

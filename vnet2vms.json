@@ -58,7 +58,7 @@
       "type": "array"
     },
     "Vms":{
-      "value": "[reference('GetVmsForIps').outputs.output.value]",
+      "value": "[reference('GetVmsForIps').outputs.outputArray.value]",
       "type": "array"
     }
   }
