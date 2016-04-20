@@ -2,9 +2,22 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "inputArray": {
+      "type": "array",
+      "metadata": {
+        "description": "input data."
+      }
+    },
+    "functionalTemplateUri": {
+      "type": "string",
+      "metadata": {
+        "description": "The functional template."
+      },
+      "defaultValue": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/echo.json"
+    }
   },
   "variables": {
-    "a1" : ["name1", "name2"],
+    "a1" : "[parameters('inputArray')]",
     "res" : []
   },
   "resources": [
@@ -25,11 +38,30 @@
      }
     },
     {
+      "name": "[concat('work', copyIndex())]",
+      "apiVersion": "2015-01-01", 
+      "type": "Microsoft.Resources/deployments",
+      "copy": {
+          "name": "copyWork",
+          "count": "[length(variables('a1'))]"
+        },
+      "dependsOn": [],
+      "properties": { 
+        "mode": "Incremental", 
+        "templateLink": {
+            "uri": "[parameters('functionalTemplateUri')]",
+            "contentVersion": "1.0.0.0"
+        }, 
+        "parameters": { 
+            "input":{"value": "[variables('a1')[copyIndex()]]"}}
+        }
+    },
+    {
       "name": "[concat('it', copyIndex())]",
       "apiVersion": "2015-01-01", 
       "type": "Microsoft.Resources/deployments",
       "copy": {
-          "name": "copy1",
+          "name": "copyIt",
           "count": "[length(variables('a1'))]"
         },
       "dependsOn": [],
@@ -41,7 +73,7 @@
         }, 
         "parameters": { 
             "arrayIn1":{"value": "[reference(concat('it', sub(copyIndex(), 1))).outputs.arrayOut.value]"},
-            "arrayIn2":{"value": ["[variables('a1')[copyIndex()]]"]}
+            "arrayIn2":{"value": ["[reference(concat('work', copyIndex())).outputs.output.value]"]}
         }
      }
     }
