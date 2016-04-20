@@ -2,7 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "ipConfiguration": {
+    "input": {
       "type": "object",
       "metadata": {
         "description": "ipConfiguration info."
@@ -14,7 +14,7 @@
   },
   "resources": [],
   "outputs": {
-    "data": { 
+    "output": { 
         "value": { 
           "vmName":"[replace(reference(concat(variables('nics')[copyIndex()].id, '/../../'), '2016-03-30').virtualMachine.id, variables('vmidPrefix'),'')]"},
         "type" : "object"
