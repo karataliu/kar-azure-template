@@ -10,14 +10,13 @@
     }
   },
   "variables": {
-    "vmidPrefix": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Compute/virtualMachines/')]",
-    "ips": "[parameters('input')]"
+    "vmidPrefix": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Compute/virtualMachines/')]"
   },
   "resources": [],
   "outputs": {
     "output": { 
         "value": { 
-          "vmName":"[replace(reference(concat(variables('ips')[copyIndex()].id, '/../../'), '2016-03-30').virtualMachine.id, variables('vmidPrefix'),'')]"},
+          "vmName":"[replace(reference(concat(parameters('input').id, '/../../'), '2016-03-30').virtualMachine.id, variables('vmidPrefix'),'')]"},
         "type" : "object"
     }
   }
