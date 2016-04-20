@@ -9,6 +9,22 @@
   },
   "resources": [
     {
+      "name": "it-1",
+      "apiVersion": "2015-01-01", 
+      "type": "Microsoft.Resources/deployments",
+      "properties": { 
+        "mode": "Incremental", 
+        "templateLink": {
+            "uri": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/arrayMerge.json",
+            "contentVersion": "1.0.0.0"
+        }, 
+        "parameters": { 
+            "arrayIn1":{"value": []},
+            "arrayIn2":{"value": []}
+        }
+     }
+    },
+    {
       "name": "[concat('it', copyIndex())]",
       "apiVersion": "2015-01-01", 
       "type": "Microsoft.Resources/deployments",
@@ -20,19 +36,20 @@
       "properties": { 
         "mode": "Incremental", 
         "templateLink": {
-            "uri": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/echo.json",
+            "uri": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/arrayMerge.json",
             "contentVersion": "1.0.0.0"
         }, 
         "parameters": { 
-            "input":{"value": {"a":"[copyIndex()]"}} 
+            "arrayIn1":{"value": "[reference(concat('it', sub(copyIndex(), 1))).outputs.arrayOut.value]"},
+            "arrayIn2":{"value": ["[variables('a1')[copyIndex()]]"]}
         }
      }
     }
   ],
   "outputs": {
-    "te":{
-      "type": "string",
-      "value": "cit"
+    "outArray":{
+      "type": "array",
+      "value": "[reference('it1').outputs.arrayOut.value]"
     }
   }
 }
