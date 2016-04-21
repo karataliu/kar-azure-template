@@ -21,22 +21,6 @@
   "resources": [
     {
      "apiVersion": "2015-01-01", 
-     "name": "GetIpsForVnet", 
-     "type": "Microsoft.Resources/deployments",
-     "properties": { 
-       "mode": "Incremental", 
-       "templateLink": {
-          "uri": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/vnet2ips.json",
-          "contentVersion": "1.0.0.0"
-       }, 
-       "parameters": {
-          "vnetName":{"value": "[parameters('virtualNetworkName')]"},
-          "subnetName":{"value": "[parameters('subnetName')]"} 
-       }
-     }
-    },
-    {
-     "apiVersion": "2015-01-01", 
      "name": "GetVmsForIps", 
      "type": "Microsoft.Resources/deployments",
      "properties": { 
@@ -46,7 +30,7 @@
           "contentVersion": "1.0.0.0"
        }, 
        "parameters": {
-          "inputArray":{"value": "[reference('GetIpsForVnet').outputs.data.value]"},
+          "inputArray":{"value": "[reference(concat('Microsoft.Network/virtualnetworks/', parameters('vnetName'), '/subnets/', parameters('subnetName')), '2016-03-30').ipConfigurations]"},
           "functionalTemplateUri": {"value": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/ip2vm.json"}
        }
      }
@@ -54,7 +38,7 @@
   ],
   "outputs": {
     "Ips":{
-      "value": "[reference('GetIpsForVnet').outputs.data.value]",
+      "value": "[reference(concat('Microsoft.Network/virtualnetworks/', parameters('vnetName'), '/subnets/', parameters('subnetName')), '2016-03-30').ipConfigurations]",
       "type": "array"
     },
     "Vms":{
