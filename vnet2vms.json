@@ -2,7 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "virtualNetworkName":{
+    "vnetName":{
       "type": "string",
       "metadata": {
         "description": "vnet name."
@@ -26,21 +26,16 @@
      "properties": { 
        "mode": "Incremental", 
        "templateLink": {
-          "uri": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/iterator.json",
+          "uri": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/iteratorIp2Vms.json",
           "contentVersion": "1.0.0.0"
        }, 
        "parameters": {
-          "inputArray":{"value": "[reference(concat('Microsoft.Network/virtualnetworks/', parameters('vnetName'), '/subnets/', parameters('subnetName')), '2016-03-30').ipConfigurations]"},
-          "functionalTemplateUri": {"value": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/ip2vm.json"}
+          "inputArray":{"value": "[reference(concat('Microsoft.Network/virtualnetworks/', parameters('vnetName'), '/subnets/', parameters('subnetName')), '2016-03-30').ipConfigurations]"}
        }
      }
     }
   ],
   "outputs": {
-    "Ips":{
-      "value": "[reference(concat('Microsoft.Network/virtualnetworks/', parameters('vnetName'), '/subnets/', parameters('subnetName')), '2016-03-30').ipConfigurations]",
-      "type": "array"
-    },
     "Vms":{
       "value": "[reference('GetVmsForIps').outputs.outputArray.value]",
       "type": "array"

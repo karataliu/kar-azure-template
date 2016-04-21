@@ -1,0 +1,64 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "inputArray": {
+      "type": "array",
+      "metadata": {
+        "description": "input data."
+      }
+    }
+  },
+  "variables": {
+    "vmidPrefix": "[concat('/subscriptions/',subscription().subscriptionId,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Compute/virtualMachines/')]",
+    "a1" : "[parameters('inputArray')]",
+    "indexBase": 1,
+    "res" : []
+  },
+  "resources": [
+    {
+      "name": "it0",
+      "apiVersion": "2015-01-01", 
+      "type": "Microsoft.Resources/deployments",
+      "properties": { 
+        "mode": "Incremental", 
+        "templateLink": {
+            "uri": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/arrayMerge.json",
+            "contentVersion": "1.0.0.0"
+        }, 
+        "parameters": { 
+            "arrayIn1":{"value": []},
+            "arrayIn2":{"value": []}
+        }
+     }
+    },
+    {
+      "name": "[concat('it', copyIndex(variables('indexBase')))]",
+      "apiVersion": "2015-01-01", 
+      "type": "Microsoft.Resources/deployments",
+      "copy": {
+          "name": "copyIt",
+          "count": "[length(variables('a1'))]"
+        },
+      "dependsOn": [],
+      "properties": { 
+        "mode": "Incremental", 
+        "templateLink": {
+            "uri": "https://raw.githubusercontent.com/karataliu/kar-azure-template/master/arrayMerge.json",
+            "contentVersion": "1.0.0.0"
+        }, 
+        "parameters": { 
+            "arrayIn1":{"value": "[reference(concat('it', sub(copyIndex(variables('indexBase')), 1))).outputs.arrayOut.value]"},
+            "arrayIn2":{"value": ["[replace(reference(concat(variables('a1')[sub(copyIndex(variables('indexBase')),1)].id, '/../../'), '2016-03-30').virtualMachine.id, variables('vmidPrefix'),'')]"]}
+        }
+     }
+    }
+  ],
+  "outputs": {
+    "outputArray":{
+      "type": "array",
+      "value": "[reference(concat('it', length(variables('a1')))).outputs.arrayOut.value]"
+    }
+  }
+}
+
