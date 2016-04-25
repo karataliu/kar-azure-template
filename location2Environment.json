@@ -5,13 +5,18 @@
     "apiSuffixes": [".core.windows.net", ".core.chinacloudapi.cn"],
     "location": "[tolower(resourceGroup().location)]",
     "locationTempSub": "[replace(variables('location'),'china','1234')]",
-    "apiSuffix": "[variables('apiSuffixes')[sub(length(variables('location')),length(variables('locationTempSub')))]]"
+    "apiSuffix": "[variables('apiSuffixes')[sub(length(variables('location')),length(variables('locationTempSub')))]]",
+    "blobApiSuffix": "[concat('.blob',variables('apiSuffix'))]"
   },
   "resources": [],
   "outputs": {
     "apiSuffix":{
       "type": "string",
       "value": "[variables('apiSuffix')]"
+    },
+    "blobApiSuffix":{
+      "type": "string",
+      "value": "[variables('blobApiSuffix')]"
     }
   }
 }
