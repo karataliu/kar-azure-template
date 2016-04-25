@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "variables": {
+    "apiSuffixes": [".core.windows.net", ".core.chinacloudapi.cn"],
+    "location": "[tolower(resourceGroup().location)]",
+    "locationTempSub": "[replace(variables('location'),'china','1234')]",
+    "apiSuffix": "[variables('apiSuffixes')[sub(length(variables('location')),length(variables('locationTempSub')))]]"
+  },
+  "resources": [],
+  "outputs": {
+    "apiSuffix":{
+      "type": "string",
+      "value": "[variables('apiSuffix')]"
+    }
+  }
+}
+
